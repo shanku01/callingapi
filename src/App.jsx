@@ -115,17 +115,17 @@ import axios from 'axios';
 
     render(){
     return ( 
-    <div>
-        <div className="header">
-        <h1 className="heading">Emplooyees</h1>
-        </div>
+    <div className="App">
+        <div className="App-header">
+        <h1 >Emplooyees</h1>
         <div className="filter">
-        <p>Enter Id to Serach the the Emplooyee</p>
+        <span>Enter Id to Serach the the Emplooyee</span>
         <input onChange={e=>{this.onSearch(e)}}/>
         </div>
-        <div>
-            <table className="tableData">
-            <tr> 
+        </div>
+        <div className="main-content">
+            <table className="table-data">
+            <tr className="tabel-header"> 
             <td>Id</td>
             <td>Name</td>
                     <td>Email</td>
@@ -135,20 +135,18 @@ import axios from 'axios';
                     <td>Department</td>
                     <td>Action</td>
                     </tr>
-                    <tr><td>Uplaod Data</td></tr>
-                    <tr>
-                    <td>Id</td>
+                    <tr className="table-input">
+                    <td > </td>
                     <td><input placeholder="Name"  onChange={(e,name="name")=>{this.onInput(e,name)}}/></td>
-                    <td><input placeholder="Email"  onChange={(e,name="email")=>{this.onInput(e,name)}}/></td>
-                    <td><input placeholder="Date of Birth"  onChange={(e,name="dateOfBirth")=>{this.onInput(e,name)}}/></td>
-                    <td><input placeholder="Phone Number"  onChange={(e,name="phoneNumber")=>{this.onInput(e,name)}}/></td>
-                    <td><input placeholder="Salary"  onChange={(e,name="salary")=>{this.onInput(e,name)}}/></td>
+                    <td><input type="email" placeholder="Email"  onChange={(e,name="email")=>{this.onInput(e,name)}}/></td>
+                    <td><input type="date" placeholder="Date of Birth"  onChange={(e,name="dateOfBirth")=>{this.onInput(e,name)}}/></td>
+                    <td><input type="number" placeholder="Phone Number"  onChange={(e,name="phoneNumber")=>{this.onInput(e,name)}}/></td>
+                    <td><input type="number" placeholder="Salary"  onChange={(e,name="salary")=>{this.onInput(e,name)}}/></td>
                     <td><input placeholder="Department"  onChange={(e,name="department")=>{this.onInput(e,name)}}/></td>
                     <td><button onClick={this.onSubmit}>Submit</button></td>
                     </tr>
-                    <tr><td>Emplooyee Data</td></tr>
                 {Object.keys(this.state.data).map((key, i)=>{
-                    return <tr key={i}>
+                    return <tr key={i} className="data">
                     <td>{this.state.data[key]._id}</td>
                     <td>{this.state.data[key].name}</td>
                     <td>{this.state.data[key].email}</td>
