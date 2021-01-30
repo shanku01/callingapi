@@ -7,6 +7,7 @@ import axios from 'axios';
         super(props);
         this.state={
             data:[],
+            copyData:[],
             submitData:{
             name:"",
             email:"",
@@ -29,8 +30,9 @@ import axios from 'axios';
     onCall(){
         axios.get("http://localhost:3030/employee")
         .then(fetchedData=>{
-            this.setState({data:fetchedData.data})
-            console.log(this.state.data);
+            this.setState({data:fetchedData.data,
+            copyData:fetchedData.data})
+
         })
         .catch(err=>{
             alert("Check your internet, We are unable to load data", err);
@@ -40,9 +42,11 @@ import axios from 'axios';
     onSearch(e){
         e.preventDefault();
         var temp =e.target.value;
-        const data0 = this.state.data;
-        if(temp!=null) this.setState({data:this.state.data.filter(x => !x.userId.indexOf(temp))});
-        else this.setState({data:data0})
+        if(temp!==""){
+            this.setState({data:this.state.data.filter(x => !x._id.indexOf(temp))});
+        }else{
+            this.setState({data:this.state.copyData});
+        }
     }
 
     onInput(e,key){
@@ -53,18 +57,33 @@ import axios from 'axios';
                 name:temp}});
                 break;
             case 'email': this.setState({submitData:{
+                name:this.state.submitData.name,
                 email:temp}});
                 break;
             case 'dateOfBirth': this.setState({submitData:{
+                name:this.state.submitData.name,
+                email:this.state.submitData.email,
                 dateOfBirth:temp}});
                 break;
             case 'phoneNumber': this.setState({submitData:{
+                name:this.state.submitData.name,
+                email:this.state.submitData.email,
+                dateOfBirth:this.state.submitData.dateOfBirth,
                 phoneNumber:temp}});
                 break;
             case 'salary': this.setState({submitData:{
+                name:this.state.submitData.name,
+                email:this.state.submitData.email,
+                dateOfBirth:this.state.submitData.dateOfBirth,
+                phoneNumber:this.state.submitData.phoneNumber,
                 salary:temp}});
                 break;
             case 'department': this.setState({submitData:{
+                name:this.state.submitData.name,
+                email:this.state.submitData.email,
+                dateOfBirth:this.state.submitData.dateOfBirth,
+                phoneNumber:this.state.submitData.phoneNumber,
+                salary:this.state.submitData.salary,
                 department:temp}});
                 break;
             default:
@@ -73,9 +92,10 @@ import axios from 'axios';
         }
 
     onSubmit(){
-        axios.post("url",this.state.submitData)
-        .then(fetchedData=>{
-            alert("Data submitted!!")
+        axios.post("http://localhost:3030/employee",this.state.submitData)
+        .then(()=>{
+            alert("Data submitted!!");
+            this.onCall();
         })
         .catch(err=>{
             alert("Check for the data, We got some error!",err)
@@ -83,9 +103,8 @@ import axios from 'axios';
     }
 
     onDelete(key){
-        key.preventDefault();
-        axios.delete("url/"+this.state.data[key].id)
-        .then(fetchedData=>{
+        axios.delete("http://localhost:3030/employee/"+this.state.data[key]._id)
+        .then(()=>{
             alert("Data Deleted!!")
             this.onCall();
         })
@@ -106,32 +125,38 @@ import axios from 'axios';
         </div>
         <div>
             <table className="tableData">
-            <th> <td>Name</td>
+            <tr> 
+            <td>Id</td>
+            <td>Name</td>
                     <td>Email</td>
                     <td>Date of Birth</td>
                     <td>Phone Number</td>
-                    <td>Salart</td>
+                    <td>Salary</td>
                     <td>Department</td>
                     <td>Action</td>
-                    </th>
-                    <th>
-                    <td><input placeholder="Name" value="name" onChange={(e,value)=>{this.onInput(e,value)}}/></td>
-                    <td><input placeholder="Email" value="email" onChange={(e,value)=>{this.onInput(e,value)}}/></td>
-                    <td><input placeholder="Date of Birth" value="dateOfBirth" onChange={(e,value)=>{this.onInput(e,value)}}/></td>
-                    <td><input placeholder="Phone Number" value="phoneNumber" onChange={(e,value)=>{this.onInput(e,value)}}/></td>
-                    <td><input placeholder="Salary" value="salary" onChange={(e,value)=>{this.onInput(e,value)}}/></td>
-                    <td><input placeholder="Department" value="department" onChange={(e,value)=>{this.onInput(e,value)}}/></td>
+                    </tr>
+                    <tr><td>Uplaod Data</td></tr>
+                    <tr>
+                    <td>Id</td>
+                    <td><input placeholder="Name"  onChange={(e,name="name")=>{this.onInput(e,name)}}/></td>
+                    <td><input placeholder="Email"  onChange={(e,name="email")=>{this.onInput(e,name)}}/></td>
+                    <td><input placeholder="Date of Birth"  onChange={(e,name="dateOfBirth")=>{this.onInput(e,name)}}/></td>
+                    <td><input placeholder="Phone Number"  onChange={(e,name="phoneNumber")=>{this.onInput(e,name)}}/></td>
+                    <td><input placeholder="Salary"  onChange={(e,name="salary")=>{this.onInput(e,name)}}/></td>
+                    <td><input placeholder="Department"  onChange={(e,name="department")=>{this.onInput(e,name)}}/></td>
                     <td><button onClick={this.onSubmit}>Submit</button></td>
-                    </th>
+                    </tr>
+                    <tr><td>Emplooyee Data</td></tr>
                 {Object.keys(this.state.data).map((key, i)=>{
                     return <tr key={i}>
+                    <td>{this.state.data[key]._id}</td>
                     <td>{this.state.data[key].name}</td>
                     <td>{this.state.data[key].email}</td>
-                    <td>{this.state.data[key].dataOfBirth}</td>
+                    <td>{this.state.data[key].dateOfBirth}</td>
                     <td>{this.state.data[key].phoneNumber}</td>
                     <td>{this.state.data[key].salary}</td>
                     <td>{this.state.data[key].department}</td>
-                    <td><button onClick={key=>{this.onDelete(key)}}>Delete</button></td>
+                    <td><button onClick={()=>{this.onDelete(key)}}>Delete</button></td>
                     </tr>
                     })}
             </table>
