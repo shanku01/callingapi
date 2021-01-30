@@ -6,6 +6,7 @@ import axios from 'axios';
     constructor(props){
         super(props);
         this.state={
+            url:"https://immense-sea-55313.herokuapp.com/employee",
             data:[],
             copyData:[],
             submitData:{
@@ -28,7 +29,7 @@ import axios from 'axios';
     }
 
     onCall(){
-        axios.get("http://localhost:3030/employee")
+        axios.get(this.state.url)
         .then(fetchedData=>{
             this.setState({data:fetchedData.data,
             copyData:fetchedData.data})
@@ -56,20 +57,22 @@ import axios from 'axios';
             case 'name': this.setState({submitData:{
                 name:temp}});
                 break;
-            case 'email': this.setState({submitData:{
-                name:this.state.submitData.name,
-                email:temp}});
+            case 'email':
+                this.setState({submitData:{
+                    name:this.state.submitData.name,
+                    email:temp}}); 
                 break;
             case 'dateOfBirth': this.setState({submitData:{
                 name:this.state.submitData.name,
                 email:this.state.submitData.email,
-                dateOfBirth:temp}});
+                dateOfBirth:temp.toString()}});
                 break;
-            case 'phoneNumber': this.setState({submitData:{
-                name:this.state.submitData.name,
-                email:this.state.submitData.email,
-                dateOfBirth:this.state.submitData.dateOfBirth,
-                phoneNumber:temp}});
+            case 'phoneNumber':
+                this.setState({submitData:{
+                    name:this.state.submitData.name,
+                    email:this.state.submitData.email,
+                    dateOfBirth:this.state.submitData.dateOfBirth,
+                    phoneNumber:temp}});
                 break;
             case 'salary': this.setState({submitData:{
                 name:this.state.submitData.name,
@@ -92,7 +95,19 @@ import axios from 'axios';
         }
 
     onSubmit(){
-        axios.post("http://localhost:3030/employee",this.state.submitData)
+        var email = /\S+@\S+\.\S+/;
+                if (email.test(this.state.submitData.email)){
+                    }
+                else
+                  {
+                    return alert("Check your Email");
+                }
+        var phoneno = /^\d{10}$/;
+                if (phoneno.test(this.state.submitData.phoneNumber)){
+                }else{
+                    return alert("Check your phone number");
+                    }                   
+        axios.post(this.state.url,this.state.submitData)
         .then(()=>{
             alert("Data submitted!!");
             this.onCall();
@@ -103,7 +118,7 @@ import axios from 'axios';
     }
 
     onDelete(key){
-        axios.delete("http://localhost:3030/employee/"+this.state.data[key]._id)
+        axios.delete(this.state.url+"/"+this.state.data[key]._id)
         .then(()=>{
             alert("Data Deleted!!")
             this.onCall();
